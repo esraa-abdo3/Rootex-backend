@@ -41,5 +41,5 @@ AllowedTo("admin"),
 Router.get("/getallproducts", getproducts);
 Router.get("/:id", getproductbyid)
 Router.delete("/:id", deleteproduct);
-Router.patch("/:id",verfiyToken,AllowedTo("admin"),   upload.array("images",3), updateProduct);
+Router.patch("/:id",   upload.array("images",3), updateProduct);
 module.exports =Router
