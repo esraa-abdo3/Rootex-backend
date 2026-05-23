@@ -29,7 +29,8 @@ const productRoutes = require("./routes/Productsroutes.js");
 app.use("/api/v1/product", productRoutes);
 const orderRoutes = require("./routes/orderroutes.js");
 app.use("/api/v1/order",orderRoutes);
-
+const uisettings = require("./routes/settingsroutes.js");
+app.use("/api/v1/setting",uisettings);
 
 // Routes
 
