@@ -34,6 +34,7 @@ const register = (async (req, res, next) => {
     
 })
 const login = (async (req, res, next) => {
+    console.log(process.env.JWT_SECRET)
        const errors = validationResult(req);
        if (!errors.isEmpty()) {
            const Error = AppError.createError({ data: errors.array() }, 400, Fail);
@@ -60,10 +61,34 @@ const login = (async (req, res, next) => {
   res.status(200).json({ status: "Success", data: { existuser  }, msg: "Login successful" })
 
 })
+const getMe = async (req, res) => {
+
+  res.status(200).json({
+    status: "Success",
+    user: req.user,
+  });
+
+};
+const logout = async (req, res) => {
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+
+  res.status(200).json({
+    status: "Success",
+    message: "Logged out successfully",
+  });
+
+};
 
 
 module.exports = {
     register,
     login,
+    getMe,
+    logout
 
 }

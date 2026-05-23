@@ -19,6 +19,8 @@ const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
+    console.log(token)
+    console.log(process.env.JWT_SECRET)
 
     if (!token) {
         return res.status(401).json({
@@ -32,6 +34,7 @@ const verifyToken = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
+        console.log(err);
         return res.status(401).json({
             status: "Error",
             msg: "Invalid token",
