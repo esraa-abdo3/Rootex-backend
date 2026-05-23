@@ -6,7 +6,7 @@ const AllowedTo = require("../middleware/AllowedTo");
 const { createOrder, getAllOrders, getOrderById, updateOrderStatus } = require("../controllers/Order/ordercontrollers");
 
 const { createOrderValidation } =require("../middleware/orderValidation")
-Router.post("/createorder",createOrderValidation, createOrder);
+Router.post("/createorder", createOrder);
 Router.get("/", getAllOrders);
 Router.get("/:id", getOrderById);
 Router.patch("/:id/status", updateOrderStatus);
