@@ -345,6 +345,7 @@ const updateOrderStatus = Asncwrapper(async (req, res, next) => {
     "shipped",
     "delivered",
     "canceled",
+
   ];
 
   if (!allowedStatus.includes(orderStatus)) {
