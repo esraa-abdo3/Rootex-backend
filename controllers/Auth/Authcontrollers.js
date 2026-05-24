@@ -26,8 +26,8 @@ const register = (async (req, res, next) => {
     await newuser.save();
     res.cookie("token", token, {
   httpOnly: true,
-  secure: false,        
-  sameSite: "lax",     
+  secure: true,        
+  sameSite: "none",     
   maxAge: 10 * 24 * 60 * 60 * 1000, 
 });
   res.status(201).json({ status: Success, msg: "user created successfully", data: { newuser } });
@@ -54,8 +54,8 @@ const login = (async (req, res, next) => {
     const token = Generatejwt({ id: existuser._id, role: existuser.role, email: existuser.email });
         res.cookie("token", token, {
   httpOnly: true,
-  secure: false,        
-  sameSite: "lax",     
+  secure: true,        
+  sameSite: "none",     
   maxAge: 7 * 24 * 60 * 60 * 1000, 
 });
   res.status(200).json({ status: "Success", data: { existuser  }, msg: "Login successful" })
