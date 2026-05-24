@@ -233,7 +233,7 @@ const createOrder = Asncwrapper(async (req, res, next) => {
       city: city,
       address: order.address,
 
-    items: sheetItems
+    items: sheetItems,
 
       totalPrice: order.totalPrice,
       paymentMethod: order.paymentMethod,
