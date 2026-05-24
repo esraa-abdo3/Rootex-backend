@@ -34,7 +34,7 @@ const register = (async (req, res, next) => {
     
 })
 const login = (async (req, res, next) => {
-    console.log(process.env.JWT_SECRET)
+
        const errors = validationResult(req);
        if (!errors.isEmpty()) {
            const Error = AppError.createError({ data: errors.array() }, 400, Fail);
@@ -58,7 +58,7 @@ const login = (async (req, res, next) => {
   sameSite: "lax",     
   maxAge: 7 * 24 * 60 * 60 * 1000, 
 });
-  res.status(200).json({ status: "Success", data: { existuser  }, msg: "Login successful" })
+  res.status(200).json({ status: "Success", data: { existuser, token  }, msg: "Login successful" })
 
 })
 const getMe = async (req, res) => {
