@@ -362,18 +362,14 @@ const updateOrderStatus = Asncwrapper(async (req, res, next) => {
     return next(AppError.createError("Order not found", 404, "Fail"));
   }
   try {
-
-    await axios.patch(process.env.T_GOOGLE_SHEET_URL, {
-      orderId: order._id,
+    await axios.post(process.env.T_GOOGLE_SHEET_URL, {
+      action: "update",
+      orderId: order._id.toString(),
       orderStatus: order.orderStatus,
     });
-
     console.log("✅ Sheet updated");
-
   } catch (err) {
-
     console.log("⚠️ Sheet update failed", err.message);
-
   }
 
 
