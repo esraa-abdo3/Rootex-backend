@@ -234,8 +234,6 @@ const createOrder = Asncwrapper(async (req, res, next) => {
       address: order.address,
 
     items: sheetItems
-  .map(i => `${i.productName} x ${i.quantity}`)
-  .join(" | "),
 
       totalPrice: order.totalPrice,
       paymentMethod: order.paymentMethod,
