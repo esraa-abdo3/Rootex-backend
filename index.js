@@ -30,7 +30,9 @@ app.use("/api/v1/product", productRoutes);
 const orderRoutes = require("./routes/orderroutes.js");
 app.use("/api/v1/order",orderRoutes);
 const uisettings = require("./routes/settingsroutes.js");
-app.use("/api/v1/setting",uisettings);
+app.use("/api/v1/setting", uisettings);
+const reviews = require("./routes/Reviewroutes.js");
+app.use("/api/v1/Review",reviews);
 
 // Routes
 
