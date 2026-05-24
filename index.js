@@ -5,7 +5,8 @@ require("dotenv").config();
 const cors = require("cors");
 const mongoconnect = require("./config/dbconnect.js");
 const app = express();
-const cookieParser= require("cookie-parser")
+const cookieParser = require("cookie-parser")
+
 // midleware
 app.use(cookieParser());
 app.use(cors({
@@ -36,7 +37,9 @@ app.use("/api/v1/Review",reviews);
 
 // Routes
 
+const sectionOrderRouter = require("./routes/sectionroutes");
 
+app.use("/api/section-order", sectionOrderRouter);
 
 
 
