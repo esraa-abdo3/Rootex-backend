@@ -39,7 +39,7 @@ app.use("/api/v1/Review",reviews);
 
 const sectionOrderRouter = require("./routes/sectionroutes");
 
-app.use("/api/section-order", sectionOrderRouter);
+app.use("/api/v1/section-order", sectionOrderRouter);
 
 
 
