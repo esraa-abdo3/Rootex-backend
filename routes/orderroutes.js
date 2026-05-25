@@ -3,11 +3,21 @@ const Router = express.Router();
 const { body } = require("express-validator");
 const verfiyToken = require("../middleware/VerfiyToken");
 const AllowedTo = require("../middleware/AllowedTo");
-const { createOrder, getAllOrders, getOrderById, updateOrderStatus } = require("../controllers/Order/ordercontrollers");
+const {
+  createOrder,
+  getAllOrders,
+  getOrderById,
+  updateOrderStatus,
+} = require("../controllers/Order/ordercontrollers");
+const { createOrderValidation } = require("../middleware/orderValidation");
+const { paymobWebhook } = require("../webhooks/webhook");
 
-const { createOrderValidation } =require("../middleware/orderValidation")
+// ✅ Webhook - لازم يكون قبل express.json()
+Router.post("/webhook", express.raw({ type: "application/json" }), paymobWebhook);
+
 Router.post("/createorder", createOrder);
 Router.get("/", getAllOrders);
 Router.get("/:id", getOrderById);
 Router.patch("/:id/status", updateOrderStatus);
-module.exports =Router
+
+module.exports = Router;
