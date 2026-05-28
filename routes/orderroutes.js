@@ -12,7 +12,6 @@ const {
 const { createOrderValidation } = require("../middleware/orderValidation");
 const { paymobWebhook } = require("../webhooks/webhook");
 
-// ✅ Webhook - لازم يكون قبل express.json()
 Router.post("/webhook", express.raw({ type: "application/json" }), paymobWebhook);
 
 Router.post("/createorder", createOrder);
