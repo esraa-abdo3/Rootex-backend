@@ -172,8 +172,32 @@ const paymobWebhook = async (req, res) => {
       if (obj.success === true && obj.pending === false) {
         order.paymentStatus = "paid";
         order.orderStatus = "processing";
+
+
+     try {
+       await axios.post(process.env.GOOGLE_SHEET_URL, {
+         action: "update",
+         orderId: order._id.toString(),
+         orderStatus: order.orderStatus,
+       });
+       console.log("✅ Sheet updated");
+     } catch (err) {
+       console.log("⚠️ Sheet update failed", err.message);
+     }
+
+
       } else {
         order.paymentStatus = "failed";
+             try {
+       await axios.post(process.env.GOOGLE_SHEET_URL, {
+         action: "update",
+         orderId: order._id.toString(),
+         orderStatus: order.orderStatus,
+       });
+       console.log("✅ Sheet updated");
+     } catch (err) {
+       console.log("⚠️ Sheet update failed", err.message);
+     }
       }
 
       await order.save();
