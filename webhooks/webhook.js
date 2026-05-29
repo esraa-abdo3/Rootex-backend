@@ -94,6 +94,7 @@
 // module.exports = { paymobWebhook };
 const crypto = require("crypto");
 const Order = require("../models/Ordermodel");
+const axios = require("axios");
 
 const paymobWebhook = async (req, res) => {
   console.log("✅ Webhook hit");
@@ -102,7 +103,7 @@ const paymobWebhook = async (req, res) => {
     const receivedHmac = req.query.hmac;
     const hmacSecret = process.env.PAYMOB_HMAC_SECRET;
 
-    // ── HMAC Verification ─────────────────────
+
     if (receivedHmac && hmacSecret) {
       const body = req.body;
       const obj = body.obj || {};
@@ -143,71 +144,77 @@ const paymobWebhook = async (req, res) => {
       }
     }
 
-    // ── Webhook Data ──────────────────────────
+
     const { obj } = req.body;
 
-    console.log("📦 Full webhook:");
-    console.log(JSON.stringify(req.body, null, 2));
+  
 
     const orderId =
       obj?.order?.merchant_order_id ||
       obj?.merchant_order_id;
 
-    console.log("🆔 Merchant Order ID:", orderId);
+
 
     if (!orderId) {
-      console.log("⚠️ No orderId in webhook");
+
       return res.sendStatus(200);
     }
 
     const order = await Order.findById(orderId);
 
     if (!order) {
-      console.log("❌ Order not found");
+     
       return res.sendStatus(404);
     }
 
     // ── Update Order ──────────────────────────
+    // if (order.paymentStatus !== "paid") {
+    //   if (obj.success === true && obj.pending === false) {
+    //     order.paymentStatus = "paid";
+    //     order.orderStatus = "processing";
+
+    //   } else {
+    //     order.paymentStatus = "failed";
+    //   }
+
+    //   await order.save();
+    //        try {
+    //    await axios.post(process.env.GOOGLE_SHEET_URL, {
+    //      action: "update",
+    //      orderId: order._id.toString(),
+    //      orderStatus: order.orderStatus,
+    //    });
+    //    console.log("✅ Sheet updated");
+    //  } catch (err) {
+    //    console.log("⚠️ Sheet update failed", err.message);
+    //  }
+    // }
     if (order.paymentStatus !== "paid") {
-      if (obj.success === true && obj.pending === false) {
-        order.paymentStatus = "paid";
-        order.orderStatus = "processing";
+  if (obj.success === true && obj.pending === false) {
+    order.paymentStatus = "paid";
+    order.orderStatus = "processing";
+  } else {
+    order.paymentStatus = "failed";
+    order.orderStatus = "failed";
+  }
 
+  await order.save();
 
-     try {
-       await axios.post(process.env.GOOGLE_SHEET_URL, {
-         action: "update",
-         orderId: order._id.toString(),
-         orderStatus: order.orderStatus,
-       });
-       console.log("✅ Sheet updated");
-     } catch (err) {
-       console.log("⚠️ Sheet update failed", err.message);
-     }
-
-
-      } else {
-        order.paymentStatus = "failed";
-             try {
-       await axios.post(process.env.GOOGLE_SHEET_URL, {
-         action: "update",
-         orderId: order._id.toString(),
-         orderStatus: order.orderStatus,
-       });
-       console.log("✅ Sheet updated");
-     } catch (err) {
-       console.log("⚠️ Sheet update failed", err.message);
-     }
-      }
-
-      await order.save();
-    }
-
-    console.log("✅ Payment updated:", {
-      success: obj.success,
-      pending: obj.pending,
-      transactionId: obj.id,
+  try {
+    await axios.post(process.env.GOOGLE_SHEET_URL, {
+      action: "update",
+      orderId: order._id.toString(),
+      orderStatus: order.orderStatus,
+      paymentStatus: order.paymentStatus,
     });
+
+    console.log("✅ Sheet updated");
+  } catch (err) {
+    console.log("⚠️ Sheet update failed", err.message);
+  }
+}
+
+
 
     return res.sendStatus(200);
   } catch (err) {
