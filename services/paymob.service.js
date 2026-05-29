@@ -2,6 +2,10 @@
 const axios = require("axios");
 
 const createPaymobIntention = async ({ order, items }) => {
+  console.log("Integration IDs:", [
+  parseInt(process.env.PAYMOB_INTEGRATION_ID),
+  parseInt(process.env.PAYMOB_WALLET_INTEGRATION_ID),
+]);
 
   try {
     const { data } = await axios.post(
@@ -10,9 +14,11 @@ const createPaymobIntention = async ({ order, items }) => {
         amount: order.totalPrice * 100,
         currency: "EGP",
 
-        payment_methods: [
-          parseInt(process.env.PAYMOB_INTEGRATION_ID),
+     payment_methods: [
+  parseInt(process.env.PAYMOB_INTEGRATION_ID),       
+  parseInt(process.env.PAYMOB_WALLET_INTEGRATION_ID), 
         ],
+     
 
         items: items.map((i) => ({
           name: i.productName,
