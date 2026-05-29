@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // 1. Counter Schema
 const counterSchema = new mongoose.Schema({
   name: String,
-  seq: { type: Number, default: 1000 }
+  seq: { type: Number, default:999 }
 });
 const Counter = mongoose.model("Counter", counterSchema);
 
@@ -88,17 +88,15 @@ orderSchema.pre("save", async function () {
 
   if (this.isNew) {
 
-    const counter = await Counter.findOneAndUpdate(
-      { name: "orderNumber" },
-      {
-        $inc: { seq: 1 },
-        $setOnInsert: { seq: 999 }
-      },
-      {
-        new: true,
-        upsert: true
-      }
-    );
+ const counter = await Counter.findOneAndUpdate(
+  { name: "orderNumber" },
+  { $inc: { seq: 1 } },
+  {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true
+  }
+);
 
     this.orderNumber = counter.seq;
   }
