@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const Order = require("../models/Ordermodel");
 
 const paymobWebhook = async (req, res) => {
+  console.log("Webhook hit");
   try {
     // ── HMAC Verification ──────────────────────────────────────
     const receivedHmac = req.query.hmac;
@@ -10,6 +11,7 @@ const paymobWebhook = async (req, res) => {
     if (receivedHmac && hmacSecret) {
       const body = req.body;
       const obj = body.obj || {};
+
 
       const hmacFields = [
         obj.amount_cents,
@@ -49,7 +51,11 @@ const paymobWebhook = async (req, res) => {
 
     // ── Process the webhook ────────────────────────────────────
     const { obj } = req.body;
-    const orderId = obj?.extras?.merchant_order_id || obj?.merchant_order_id;
+         console.log(JSON.stringify(req.body, null, 2));
+    const orderId =
+  obj?.order?.merchant_order_id ||
+  obj?.merchant_order_id;
+    console.log(orderId)
 
     if (!orderId) {
       console.log("⚠️ No orderId in webhook");
@@ -59,12 +65,16 @@ const paymobWebhook = async (req, res) => {
     const order = await Order.findById(orderId);
     if (!order) return res.sendStatus(404);
 
-    if (obj.success === true) {
-      order.paymentStatus = "paid";
-      order.orderStatus = "processing";
-    } else {
-      order.paymentStatus = "failed";
-    }
+if (order.paymentStatus !== "paid") {
+  if (obj.success === true && obj.pending === false) {
+    order.paymentStatus = "paid";
+    order.orderStatus = "processing";
+  } else {
+    order.paymentStatus = "failed";
+  }
+
+  await order.save();
+}
 
     await order.save();
     console.log(`✅ Webhook processed - Order ${orderId} - ${order.paymentStatus}`);
@@ -73,6 +83,12 @@ const paymobWebhook = async (req, res) => {
     console.error("❌ Webhook error:", err.message);
     res.sendStatus(500);
   }
+  console.log({
+  merchantOrderId: obj?.order?.merchant_order_id,
+  success: obj.success,
+  pending: obj.pending,
+  transactionId: obj.id,
+});
 };
 
 module.exports = { paymobWebhook };
