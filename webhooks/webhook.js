@@ -74,28 +74,7 @@ const paymobWebhook = async (req, res) => {
       return res.sendStatus(404);
     }
 
-    // ── Update Order ──────────────────────────
-    // if (order.paymentStatus !== "paid") {
-    //   if (obj.success === true && obj.pending === false) {
-    //     order.paymentStatus = "paid";
-    //     order.orderStatus = "processing";
-
-    //   } else {
-    //     order.paymentStatus = "failed";
-    //   }
-
-    //   await order.save();
-    //        try {
-    //    await axios.post(process.env.GOOGLE_SHEET_URL, {
-    //      action: "update",
-    //      orderId: order._id.toString(),
-    //      orderStatus: order.orderStatus,
-    //    });
-    //    console.log("✅ Sheet updated");
-    //  } catch (err) {
-    //    console.log("⚠️ Sheet update failed", err.message);
-    //  }
-    // }
+ 
     if (order.paymentStatus !== "paid") {
     if (obj.success === true && obj.pending === false) {
     order.paymentStatus = "paid";
@@ -110,7 +89,7 @@ const paymobWebhook = async (req, res) => {
   try {
     await axios.post(process.env.GOOGLE_SHEET_URL, {
       action: "update",
-      orderId: order._id.toString(),
+         orderNumber: order.orderNumber, 
       orderStatus: order.orderStatus,
       paymentStatus: order.paymentStatus,
     });
