@@ -1,4 +1,5 @@
-const express = require( "express");
+const express = require("express");
+const upload = require("../middleware/uploadMiddleware");
 
 const {
   createReview,
@@ -11,13 +12,13 @@ const {
 
 const router = express.Router();
 
-router.post("/", createReview);
+router.post("/",upload.single("image"), createReview);
 
 router.get("/", getReviews);
 
 router.get("/visible", getVisibleReviews);
 
-router.patch("/:id", updateReview);
+router.patch("/:id" ,upload.single("image"), updateReview);
 
 router.delete("/:id", deleteReview);
 

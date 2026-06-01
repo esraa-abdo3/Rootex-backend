@@ -1,17 +1,16 @@
 const mongoose = require("mongoose");
 
-// 1. Counter Schema
 const counterSchema = new mongoose.Schema({
   name: String,
   seq: { type: Number, default:999 }
 });
 const Counter = mongoose.model("Counter", counterSchema);
 
-// 2. Order Schema
+
 const orderSchema = new mongoose.Schema(
   {
     orderNumber: {
-      type: Number,
+      type: String,
       unique: true,
     },
     name: {
@@ -83,7 +82,7 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// 3. Pre-save Hook
+
 orderSchema.pre("save", async function () {
 
   if (this.isNew) {
@@ -98,7 +97,7 @@ orderSchema.pre("save", async function () {
   }
 );
 
-    this.orderNumber = counter.seq;
+ this.orderNumber = `A${counter.seq}`;
   }
 });
 

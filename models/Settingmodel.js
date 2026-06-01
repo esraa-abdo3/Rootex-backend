@@ -39,6 +39,14 @@ const settingSchema = new mongoose.Schema(
       herosection: String,
       resultBg: String,
     },
+    Fontfamily: {
+      type : String
+    },
+    productheader: {
+      type:String
+      
+    }
+  
 
   },
   {
