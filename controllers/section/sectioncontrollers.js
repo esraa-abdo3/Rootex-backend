@@ -1,21 +1,20 @@
-// controllers/sectionOrder.controller.js
-const SectionOrder =require( "../../models/SectionOrdermodel");
 
-// ── GET ───────────────────────────────────────────────────────────────────
- const getSectionOrder = async (req, res) => {
+const SectionOrder = require("../../models/SectionOrdermodel");
+
+const getSectionOrder = async (req, res) => {
   try {
     let doc = await SectionOrder.findOne();
-
-    if (!doc) {
-      doc = await SectionOrder.create({});  // هياخد الـ defaults تلقائي
-    }
+    if (!doc) doc = await SectionOrder.create({});
 
     res.json({
       success: true,
       order: {
-        product: doc.product,
-        after:   doc.after,
-        review:  doc.review,
+        Heroheader: doc.Heroheader,
+        Hero:       doc.Hero,
+        product:    doc.product,
+        after:      doc.after,
+        review:     doc.review,
+        CTA:        doc.CTA,
       },
     });
   } catch (err) {
@@ -23,48 +22,50 @@ const SectionOrder =require( "../../models/SectionOrdermodel");
   }
 };
 
-
 const updateSectionOrder = async (req, res) => {
   try {
-    const { product, after, review } = req.body;
+    const { Heroheader, Hero, product, after, review, CTA } = req.body;
 
-
-    const values = [product, after, review];
+    const values = [Heroheader, Hero, product, after, review, CTA];
     const isValid =
-      values.every((v) => [1, 2, 3].includes(v)) &&
-      new Set(values).size === 3; 
+      values.every((v) => [1, 2, 3, 4, 5, 6].includes(Number(v))) &&
+      new Set(values).size === 6;
 
     if (!isValid) {
       return res.status(400).json({
         success: false,
-        message: "لازم القيم تكون 1 و2 و3 من غير تكرار",
+        message: "القيم لازم تكون 1 لـ 6 من غير تكرار",
       });
     }
 
     let doc = await SectionOrder.findOne();
 
     if (!doc) {
-      doc = await SectionOrder.create({ product, after, review });
+      doc = await SectionOrder.create({ Heroheader, Hero, product, after, review, CTA });
     } else {
-      doc.product = product;
-      doc.after   = after;
-      doc.review  = review;
+      doc.Heroheader = Heroheader;
+      doc.Hero       = Hero;
+      doc.product    = product;
+      doc.after      = after;
+      doc.review     = review;
+      doc.CTA        = CTA;
       await doc.save();
     }
 
     res.json({
       success: true,
       order: {
-        product: doc.product,
-        after:   doc.after,
-        review:  doc.review,
+        Heroheader: doc.Heroheader,
+        Hero:       doc.Hero,
+        product:    doc.product,
+        after:      doc.after,
+        review:     doc.review,
+        CTA:        doc.CTA,
       },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-module.exports = {
-  getSectionOrder,
-  updateSectionOrder
-}
+
+module.exports = { getSectionOrder, updateSectionOrder };
