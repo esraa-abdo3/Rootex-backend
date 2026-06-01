@@ -22,8 +22,6 @@ const getSettings = async (req, res) => {
 };
 
 
-// ================= CREATE SETTINGS =================
-// ================= CREATE SETTINGS =================
 const createSettings = async (req, res) => {
   try {
 
@@ -39,7 +37,7 @@ const createSettings = async (req, res) => {
     let herosection = "";
     let resultBg = "";
 
-    // ================= HERO IMAGE =================
+
     if (req.files?.herosection?.[0]) {
 
       const file = req.files.herosection[0];
@@ -53,7 +51,6 @@ const createSettings = async (req, res) => {
       herosection = upload.url;
     }
 
-    // ================= RESULT IMAGE =================
     if (req.files?.resultBg?.[0]) {
 
       const file = req.files.resultBg[0];
@@ -110,6 +107,7 @@ const createSettings = async (req, res) => {
         herosection,
         resultBg,
       },
+      Fontfamily: req.body.Fontfamily || "Cairo",
 
     });
 
@@ -128,10 +126,6 @@ const createSettings = async (req, res) => {
   }
 };
 
-
-
-
-// ================= UPDATE SETTINGS =================
 const updateSettings = async (req, res) => {
   try {
 
@@ -146,10 +140,10 @@ const updateSettings = async (req, res) => {
 
     const updateData = {};
 
-    // ================= HOOK =================
+
     const hook = {};
 
-    // text1
+
     if (req.body.text1_ar || req.body.text1_en) {
 
       hook.text1 = {
@@ -165,7 +159,7 @@ const updateSettings = async (req, res) => {
       };
     }
 
-    // text2
+  
     if (req.body.text2_ar || req.body.text2_en) {
 
       hook.text2 = {
@@ -181,7 +175,7 @@ const updateSettings = async (req, res) => {
       };
     }
 
-    // highlight1
+  
     if (req.body.highlight1_ar || req.body.highlight1_en) {
 
       hook.highlight1 = {
@@ -304,7 +298,10 @@ const updateSettings = async (req, res) => {
         ...images,
       };
     }
-
+// ================= FONT =================
+if (req.body.Fontfamily) {
+  updateData.Fontfamily = req.body.Fontfamily;
+}
     // ================= UPDATE =================
     const updated = await Setting.findByIdAndUpdate(
       settings._id,

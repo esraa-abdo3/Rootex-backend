@@ -42,10 +42,7 @@ const settingSchema = new mongoose.Schema(
     Fontfamily: {
       type : String
     },
-    productheader: {
-      type:String
-      
-    }
+ 
   
 
   },
