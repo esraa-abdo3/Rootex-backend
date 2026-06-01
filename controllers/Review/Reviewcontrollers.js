@@ -60,17 +60,22 @@ const imagekit = require("../../utilits/imagekit");
 const updateReview = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     const updateData = { ...req.body };
 
     if (req.file) {
+    
       const uploaded = await imagekit.upload({
         file: req.file.buffer,
         fileName: `review-${Date.now()}`,
         folder: "/reviews",
       });
       updateData.image = uploaded.url;
+    } else if (req.body.removeImage === "true") {
+    
+      updateData.image = null;
     }
+
+    delete updateData.removeImage;
 
     const updatedReview = await Review.findByIdAndUpdate(id, updateData, {
       new: true,
