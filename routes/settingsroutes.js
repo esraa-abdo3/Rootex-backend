@@ -13,33 +13,14 @@ router.get("/", getSettings);
 // ================= CREATE =================
 router.post(
   "/",
-  upload.fields([
-    {
-      name: "herosection",
-      maxCount: 1,
-    },
-    {
-      name: "resultBg",
-      maxCount: 1,
-    },
-  ]),
+  upload.any(),
   createSettings
 );
 
 
-
 router.patch(
   "/",
-  upload.fields([
-    {
-      name: "herosection",
-      maxCount: 1,
-    },
-    {
-      name: "resultBg",
-      maxCount: 1,
-    },
-  ]),
+  upload.any(),
   updateSettings
 );
 
