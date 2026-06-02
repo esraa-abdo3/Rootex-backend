@@ -110,6 +110,17 @@ if (req.files?.resultBg?.length) {
       },
       Fontfamily: req.body.Fontfamily || "Cairo",
 
+ reviewheader: {
+  text: {
+    ar: req.body.textreview_ar,
+    en: req.body.textreview_en,
+  },
+  paragraph: {
+    ar: req.body.paragraphreview_ar,
+    en: req.body.paragraphreview_en,
+  },
+}
+
     });
 
     res.status(201).json({
@@ -215,7 +226,46 @@ const updateSettings = async (req, res) => {
         ...hook,
       };
     }
+// ================= REVIEW HEADER =================
+const reviewheader = {};
 
+if (req.body.textreview_ar || req.body.textreview_en) {
+  reviewheader.text = {
+    ...settings.reviewheader?.text,
+
+    ...(req.body.textreview_ar && {
+      ar: req.body.textreview_ar,
+    }),
+
+    ...(req.body.textreview_en && {
+      en: req.body.textreview_en,
+    }),
+  };
+}
+
+if (
+  req.body.paragraphreview_ar ||
+  req.body.paragraphreview_en
+) {
+  reviewheader.paragraph = {
+    ...settings.reviewheader?.paragraph,
+
+    ...(req.body.paragraphreview_ar && {
+      ar: req.body.paragraphreview_ar,
+    }),
+
+    ...(req.body.paragraphreview_en && {
+      en: req.body.paragraphreview_en,
+    }),
+  };
+}
+
+if (Object.keys(reviewheader).length > 0) {
+  updateData.reviewheader = {
+    ...settings.reviewheader,
+    ...reviewheader,
+  };
+}
     // ================= BUTTON =================
     if (
       req.body.buttonText_ar ||

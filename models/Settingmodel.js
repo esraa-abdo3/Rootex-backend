@@ -13,7 +13,6 @@ const multiLangSchema = {
 
 const settingSchema = new mongoose.Schema(
   {
-
     // ================= HOOK =================
     hook: {
       text1: multiLangSchema,
@@ -37,15 +36,17 @@ const settingSchema = new mongoose.Schema(
     // ================= IMAGES =================
     images: {
       herosection: String,
-       resultBg: [String],
+      resultBg: [String],
     },
-    
-    Fontfamily: {
-      type : String
-    },
- 
-  
 
+    Fontfamily: {
+      type: String,
+    },
+
+    reviewheader: {
+      text: multiLangSchema,
+      paragraph: multiLangSchema,
+    },
   },
   {
     timestamps: true,
