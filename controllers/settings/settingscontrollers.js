@@ -279,22 +279,33 @@ const updateSettings = async (req, res) => {
     }
 
     // result image
-  if (req.files?.resultBg?.length) {
+if (req.files?.resultBg?.length || req.body.existingResultBg) {
+  
 
-  const uploadedImages = [];
-
-  for (const file of req.files.resultBg) {
-
-    const upload = await imagekit.upload({
-      file: file.buffer,
-      fileName: Date.now() + "-" + file.originalname,
-      folder: "/settings",
-    });
-
-    uploadedImages.push(upload.url);
+  let existingUrls = [];
+  if (req.body.existingResultBg) {
+    try {
+      existingUrls = JSON.parse(req.body.existingResultBg);
+    } catch (_) {
+      existingUrls = [];
+    }
   }
 
-  images.resultBg = uploadedImages;
+
+  const uploadedUrls = [];
+  if (req.files?.resultBg?.length) {
+    for (const file of req.files.resultBg) {
+      const upload = await imagekit.upload({
+        file: file.buffer,
+        fileName: Date.now() + "-" + file.originalname,
+        folder: "/settings",
+      });
+      uploadedUrls.push(upload.url);
+    }
+  }
+
+  // ادمج القديم + الجديد
+  images.resultBg = [...existingUrls, ...uploadedUrls];
 }
 
     if (Object.keys(images).length > 0) {
