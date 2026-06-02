@@ -37,14 +37,9 @@ const settingSchema = new mongoose.Schema(
     // ================= IMAGES =================
     images: {
       herosection: String,
-  
+       resultBg: [String],
     },
-        resultPages: [
-      {
-        index: { type: Number, required: true },
-        slides: [{ type: String }], 
-      },
-    ],
+    
     Fontfamily: {
       type : String
     },
