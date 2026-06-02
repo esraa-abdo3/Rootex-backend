@@ -35,7 +35,7 @@ const createSettings = async (req, res) => {
     }
 
     let herosection = "";
-    let resultBg = "";
+
 
 
     if (req.files?.herosection?.[0]) {
@@ -51,17 +51,25 @@ const createSettings = async (req, res) => {
       herosection = upload.url;
     }
 
-    if (req.files?.resultBg?.[0]) {
 
-      const file = req.files.resultBg[0];
+    const resultPages = [];
+    const pagesMeta = req.body.resultPages ? JSON.parse(req.body.resultPages) : [];
+      for (const page of pagesMeta) {
+      const slides = [];
+      const filesKey = `resultPage_${page.index}_slides`;
 
-      const upload = await imagekit.upload({
-        file: file.buffer,
-        fileName: Date.now() + "-" + file.originalname,
-        folder: "/settings",
-      });
+      if (req.files?.[filesKey]) {
+        for (const file of req.files[filesKey]) {
+          const upload = await imagekit.upload({
+            file: file.buffer,
+            fileName: Date.now() + "-" + file.originalname,
+            folder: `/settings/resultPages/${page.index}`,
+          });
+          slides.push(upload.url);
+        }
+      }
 
-      resultBg = upload.url;
+      resultPages.push({ index: page.index, slides });
     }
 
     const settings = await Setting.create({
@@ -104,9 +112,9 @@ const createSettings = async (req, res) => {
       },
 
       images: {
-        herosection,
-        resultBg,
+        herosection
       },
+         resultPages,
       Fontfamily: req.body.Fontfamily || "Cairo",
 
     });
@@ -277,19 +285,44 @@ const updateSettings = async (req, res) => {
       images.herosection = upload.url;
     }
 
-    // result image
-    if (req.files?.resultBg?.[0]) {
+    if (req.body.updateResultPages) {
+  const pagesMeta = JSON.parse(req.body.updateResultPages);
 
-      const file = req.files.resultBg[0];
+  // ابدأ بنسخة من الموجود
+  const existingPages = settings.resultPages
+    ? settings.resultPages.map((p) => ({ index: p.index, slides: [...p.slides] }))
+    : [];
 
-      const upload = await imagekit.upload({
-        file: file.buffer,
-        fileName: Date.now() + "-" + file.originalname,
-        folder: "/settings",
-      });
+  for (const page of pagesMeta) {
+    const filesKey = `resultPage_${page.index}_slides`;
+    const newSlides = [];
 
-      images.resultBg = upload.url;
+    if (req.files?.[filesKey]) {
+      for (const file of req.files[filesKey]) {
+        const upload = await imagekit.upload({
+          file: file.buffer,
+          fileName: Date.now() + "-" + file.originalname,
+          folder: `/settings/resultPages/${page.index}`,
+        });
+        newSlides.push(upload.url);
+      }
     }
+
+
+    const existingIndex = existingPages.findIndex((p) => p.index === page.index);
+
+    if (existingIndex !== -1) {
+       if (newSlides.length > 0) {
+    existingPages[existingIndex].slides = newSlides;
+  }
+    } else {
+      existingPages.push({ index: page.index, slides: newSlides });
+    }
+  }
+
+
+  updateData.resultPages = existingPages.sort((a, b) => a.index - b.index);
+}
 
     if (Object.keys(images).length > 0) {
 
