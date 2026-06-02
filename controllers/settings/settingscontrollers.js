@@ -285,10 +285,9 @@ const updateSettings = async (req, res) => {
       images.herosection = upload.url;
     }
 
-    if (req.body.updateResultPages) {
+if (req.body.updateResultPages) {
   const pagesMeta = JSON.parse(req.body.updateResultPages);
 
-  // ابدأ بنسخة من الموجود
   const existingPages = settings.resultPages
     ? settings.resultPages.map((p) => ({ index: p.index, slides: [...p.slides] }))
     : [];
@@ -308,18 +307,19 @@ const updateSettings = async (req, res) => {
       }
     }
 
-
     const existingIndex = existingPages.findIndex((p) => p.index === page.index);
 
+    // ✅ الجديد: بنستخدم الـ existing slides اللي بعتها الـ frontend
+    // + بنضيف الصور الجديدة عليها
+    const keptSlides = page.existingSlides || []; // الصور اللي الـ frontend حافظ عليها
+    const finalSlides = [...keptSlides, ...newSlides];
+
     if (existingIndex !== -1) {
-       if (newSlides.length > 0) {
-    existingPages[existingIndex].slides = newSlides;
-  }
+      existingPages[existingIndex].slides = finalSlides;
     } else {
-      existingPages.push({ index: page.index, slides: newSlides });
+      existingPages.push({ index: page.index, slides: finalSlides });
     }
   }
-
 
   updateData.resultPages = existingPages.sort((a, b) => a.index - b.index);
 }
