@@ -77,10 +77,32 @@ const createOrder = Asncwrapper(async (req, res, next) => {
   );
 
   // ── Send to Google Sheet (non-blocking) ───────────────────
-  axios
-    .post(process.env.GOOGLE_SHEET_URL, {
+  // axios
+  //   .post(process.env.GOOGLE_SHEET_URL, {
+  //     orderId: order._id.toString(),
+  //     orderNumber: order.orderNumber, 
+  //     name: order.name,
+  //     phone: order.phone,
+  //     email: order.email || "",
+  //     country: "Egypt",
+  //     governorate,
+  //     city,
+  //     address: order.address,
+  //     items: sheetItems,
+  //     totalPrice: order.totalPrice,
+  //     paymentMethod: order.paymentMethod,
+  //     paymentStatus: "pending",
+  //     orderStatus: "pending",
+  //   })
+  //   .then(() => console.log("✅ Sent to Google Sheet"))
+  //   .catch((err) => console.log("⚠️ Google Sheet Error:", err.response?.data || err.message));
+// ── Send to Google Sheet (non-blocking) ───────────────────
+axios
+  .post(
+    process.env.GOOGLE_SHEET_URL,
+    JSON.stringify({         // ✅ stringify يدوي
       orderId: order._id.toString(),
-      orderNumber: order.orderNumber, 
+      orderNumber: order.orderNumber,
       name: order.name,
       phone: order.phone,
       email: order.email || "",
@@ -93,10 +115,16 @@ const createOrder = Asncwrapper(async (req, res, next) => {
       paymentMethod: order.paymentMethod,
       paymentStatus: "pending",
       orderStatus: "pending",
-    })
-    .then(() => console.log("✅ Sent to Google Sheet"))
-    .catch((err) => console.log("⚠️ Google Sheet Error:", err.response?.data || err.message));
-
+    }),
+    {
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",  // ✅ ده هو السر
+      },
+      maxRedirects: 5,  // ✅ اتبع الـ redirect
+    }
+  )
+  .then(() => console.log("✅ Sent to Google Sheet"))
+  .catch((err) => console.log("⚠️ Google Sheet Error:", err.response?.data || err.message));
   // ── Cash flow ──────────────────────────────────────────────
   if (paymentMethod === "cash") {
     return res.status(201).json({
