@@ -26,11 +26,11 @@ const settingSchema = new mongoose.Schema(
 
     // ================= COLORS =================
     colors: {
-      primaryDark: String,
-      secondaryDark: String,
-      primary: String,
-      gold: String,
-      goldLight: String,
+      backgroundColor: String,
+      buttonbackground: String,
+      buttontext: String,
+      textColor: String,
+      highlightColor: String,
     },
 
     // ================= IMAGES =================
@@ -41,6 +41,9 @@ const settingSchema = new mongoose.Schema(
 
     Fontfamily: {
       type: String,
+    },
+    Brand: {
+       type: String,
     },
 
     reviewheader: {

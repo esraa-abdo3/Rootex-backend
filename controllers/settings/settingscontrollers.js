@@ -97,11 +97,11 @@ if (req.files?.resultBg?.length) {
       },
 
       colors: {
-        primaryDark: req.body.primaryDark,
-        secondaryDark: req.body.secondaryDark,
-        primary: req.body.primary,
-        gold: req.body.gold,
-        goldLight: req.body.goldLight,
+        backgroundColor: req.body.backgroundColor,
+        buttonbackground: req.body.buttonbackground,
+        buttontext: req.body.buttontext,
+        textColor: req.body.textColor,
+        highlightColor: req.body.highlightColor,
       },
 
       images: {
@@ -109,6 +109,7 @@ if (req.files?.resultBg?.length) {
         resultBg,
       },
       Fontfamily: req.body.Fontfamily || "Cairo",
+      Brand:req.body.Brand ||"",
 
  reviewheader: {
   text: {
@@ -308,20 +309,20 @@ if (Object.keys(reviewheader).length > 0) {
     // ================= COLORS =================
     const colors = {};
 
-    if (req.body.primaryDark)
-      colors.primaryDark = req.body.primaryDark;
+    if (req.body.backgroundColor)
+      colors.backgroundColor = req.body.backgroundColor;
 
-    if (req.body.secondaryDark)
-      colors.secondaryDark = req.body.secondaryDark;
+    if (req.body.buttonbackground)
+      colors.buttonbackground = req.body.buttonbackground;
 
-    if (req.body.primary)
-      colors.primary = req.body.primary;
+    if (req.body.buttontext)
+      colors.buttontext= req.body.buttontext;
 
-    if (req.body.gold)
-      colors.gold = req.body.gold;
+    if (req.body.textColor)
+      colors.textColor = req.body.textColor;
 
-    if (req.body.goldLight)
-      colors.goldLight = req.body.goldLight;
+    if (req.body.highlightColor)
+      colors.highlightColor = req.body.highlightColor;
 
     if (Object.keys(colors).length > 0) {
 
@@ -388,6 +389,9 @@ if (req.files?.resultBg?.length || req.body.existingResultBg) {
 // ================= FONT =================
 if (req.body.Fontfamily) {
   updateData.Fontfamily = req.body.Fontfamily;
+    }
+    if (req.body.Brand) {
+  updateData.Brand = req.body.Brand;
 }
     // ================= UPDATE =================
     const updated = await Setting.findByIdAndUpdate(
