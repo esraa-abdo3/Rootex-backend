@@ -110,6 +110,7 @@ if (req.files?.resultBg?.length) {
       },
       Fontfamily: req.body.Fontfamily || "Cairo",
       Brand: req.body.Brand || "",
+      shippingPrice: req.body.shippingPrice || 60,
     
        reviewheader: {
   text: {
@@ -280,7 +281,9 @@ if (Object.keys(reviewheader).length > 0) {
   };
     }
 
-
+if (req.body.shippingPrice !== undefined) {
+  updateData.shippingPrice = Number(req.body.shippingPrice);
+}
 if (
   req.body.shippingSignature_ar ||
   req.body.shippingSignature_en

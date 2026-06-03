@@ -56,7 +56,11 @@ const settingSchema = new mongoose.Schema(
     shippingSignature: {
       type: multiLangSchema,
       
-    }
+    },
+    shippingPrice: {
+  type: Number,
+  default: 60,
+},
   },
   {
     timestamps: true,
