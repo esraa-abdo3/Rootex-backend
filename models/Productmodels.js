@@ -30,6 +30,10 @@ const productSchema =  new monogoose.Schema(
       type: Number,
       required: true,
     },
+ oldPrice: {
+  type: Number,
+  default: 2700,
+},
 
     images: {
       type: [String], 
@@ -46,6 +50,10 @@ const productSchema =  new monogoose.Schema(
       type: String,
        default: "hair-care"
     },
+ idnumber: {
+  type: String,
+  default: "1000",
+}
   },
   { timestamps: true }
 );

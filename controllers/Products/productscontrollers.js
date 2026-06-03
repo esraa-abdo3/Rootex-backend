@@ -17,10 +17,11 @@ const Createproduct = Asncwrapper(async (req, res, next) => {
   }
 
   // 2- get body data (Express way)
-  const { name, description, price, stock} = req.body;
+  const { name, description, price, stock , oldPrice} = req.body;
 
   const parsedPrice = Number(price);
   const parsedStock = Number(stock || 0);
+  
 
   if (isNaN(parsedPrice) || parsedPrice < 0) {
     return next(AppError.createError("Invalid price", 400, "Fail"));
@@ -54,7 +55,7 @@ const Createproduct = Asncwrapper(async (req, res, next) => {
     description: JSON.parse(description),
     price: parsedPrice,
     stock: parsedStock,
-    
+    oldPrice: oldPrice ? Number(oldPrice) : null,
     images: uploadedImages,
   });
 
@@ -169,6 +170,9 @@ const updateProduct = Asncwrapper(async (req, res, next) => {
 
     product.price = price;
   }
+  if (req.body?.oldPrice !== undefined) {
+  product.oldPrice = Number(req.body.oldPrice);
+}
 
   // =========================
   // 6- STOCK
