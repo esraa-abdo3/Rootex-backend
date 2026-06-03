@@ -119,7 +119,11 @@ if (req.files?.resultBg?.length) {
     ar: req.body.paragraphreview_ar,
     en: req.body.paragraphreview_en,
   },
-}
+      },
+ fansText: {
+  ar: req.body.fansText_ar,
+  en: req.body.fansText_en,
+},
 
     });
 
@@ -264,6 +268,22 @@ if (Object.keys(reviewheader).length > 0) {
   updateData.reviewheader = {
     ...settings.reviewheader,
     ...reviewheader,
+  };
+    }
+    if (
+  req.body.fansText_ar ||
+  req.body.fansText_en
+) {
+  updateData.fansText = {
+    ...settings.fansText,
+
+    ...(req.body.fansText_ar && {
+      ar: req.body.fansText_ar,
+    }),
+
+    ...(req.body.fansText_en && {
+      en: req.body.fansText_en,
+    }),
   };
 }
     // ================= BUTTON =================

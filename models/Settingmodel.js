@@ -47,6 +47,9 @@ const settingSchema = new mongoose.Schema(
       text: multiLangSchema,
       paragraph: multiLangSchema,
     },
+    fansText: {
+  type: multiLangSchema,
+},
   },
   {
     timestamps: true,
