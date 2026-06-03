@@ -133,7 +133,16 @@ if (req.files?.resultBg?.length) {
      shippingSignature: {
   ar: req.body.shippingSignature_ar,
   en: req.body.shippingSignature_en,
-},
+      },
+      floatingButton: {
+        visible: req.body.floatingButton_visible !== undefined
+          ? req.body.floatingButton_visible === "true"
+          : true,
+        text: {
+          ar: req.body.floatingButton_text_ar || "اشتري الآن",
+          en: req.body.floatingButton_text_en || "Buy Now",
+        }
+      }
 
     });
 
@@ -240,7 +249,19 @@ const updateSettings = async (req, res) => {
         ...hook,
       };
     }
-// ================= REVIEW HEADER =================
+    // ================= REVIEW HEADER =================
+    // ================= FLOATING BUTTON =================
+if (req.body.floatingButton_visible !== undefined) {
+  updateData["floatingButton.visible"] = req.body.floatingButton_visible === "true";
+}
+if (req.body.floatingButton_text_ar || req.body.floatingButton_text_en) {
+  updateData["floatingButton.text"] = {
+    ...settings.floatingButton?.text,
+    ...(req.body.floatingButton_text_ar && { ar: req.body.floatingButton_text_ar }),
+    ...(req.body.floatingButton_text_en && { en: req.body.floatingButton_text_en }),
+  };
+}
+
 const reviewheader = {};
 
 if (req.body.textreview_ar || req.body.textreview_en) {

@@ -58,8 +58,12 @@ const settingSchema = new mongoose.Schema(
       
     },
     shippingPrice: {
-  type: Number,
-  default: 60,
+     type: Number,
+    },
+    // ================= FLOATING BUTTON =================
+floatingButton: {
+  visible: { type: Boolean, default: true },
+  text: multiLangSchema
 },
   },
   {
