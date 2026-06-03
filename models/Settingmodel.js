@@ -51,8 +51,12 @@ const settingSchema = new mongoose.Schema(
       paragraph: multiLangSchema,
     },
     fansText: {
-  type: multiLangSchema,
-},
+    type: multiLangSchema,
+    },
+    shippingSignature: {
+      type: multiLangSchema,
+      
+    }
   },
   {
     timestamps: true,

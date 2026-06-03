@@ -109,9 +109,9 @@ if (req.files?.resultBg?.length) {
         resultBg,
       },
       Fontfamily: req.body.Fontfamily || "Cairo",
-      Brand:req.body.Brand ||"",
-
- reviewheader: {
+      Brand: req.body.Brand || "",
+    
+       reviewheader: {
   text: {
     ar: req.body.textreview_ar,
     en: req.body.textreview_en,
@@ -121,9 +121,17 @@ if (req.files?.resultBg?.length) {
     en: req.body.paragraphreview_en,
   },
       },
- fansText: {
-  ar: req.body.fansText_ar,
-  en: req.body.fansText_en,
+         shippingSignature: {
+    ar: req.body.shippingSignature_ar,
+    en: req.body.shippingSignature_en,
+  },
+     fansText: {
+       ar: req.body.fansText_ar,
+      en: req.body.fansText_en,
+      },
+     shippingSignature: {
+  ar: req.body.shippingSignature_ar,
+  en: req.body.shippingSignature_en,
 },
 
     });
@@ -271,6 +279,26 @@ if (Object.keys(reviewheader).length > 0) {
     ...reviewheader,
   };
     }
+
+
+if (
+  req.body.shippingSignature_ar ||
+  req.body.shippingSignature_en
+) {
+  updateData.shippingSignature = {
+    ...settings.shippingSignature,
+
+    ...(req.body.shippingSignature_ar && {
+      ar: req.body.shippingSignature_ar,
+    }),
+
+    ...(req.body.shippingSignature_en && {
+      en: req.body.shippingSignature_en,
+    }),
+  };
+}
+
+
     if (
   req.body.fansText_ar ||
   req.body.fansText_en
