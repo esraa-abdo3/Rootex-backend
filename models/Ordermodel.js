@@ -22,9 +22,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
       match: /^01[0125][0-9]{8}$/,
     },
-    email: {
-      type: String,
-    },
+ 
     country: {
       type: String,
       default: "Egypt",

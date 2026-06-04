@@ -16,7 +16,7 @@ const createOrder = Asncwrapper(async (req, res, next) => {
     return next(AppError.createError({ data: errors.array() }, 400, "Fail"));
   }
 
-  const { name, phone, email, address, items, paymentMethod, governorate, city } = req.body;
+  const { name, phone, address, items, paymentMethod, governorate, city } = req.body;
 
   if (!items || items.length === 0) {
     return next(AppError.createError("No items found", 400, "Fail"));
@@ -54,7 +54,6 @@ const createOrder = Asncwrapper(async (req, res, next) => {
   const order = await Order.create({
     name,
     phone,
-    email,
     governorate,
     city,
     address,
@@ -72,6 +71,7 @@ const createOrder = Asncwrapper(async (req, res, next) => {
         productName: productData?.name?.en || "Unknown",
         quantity: item.quantity,
         price: item.price,
+        idnumber: productData?.idnumber || "1000"
       };
     })
   );
@@ -100,12 +100,10 @@ const createOrder = Asncwrapper(async (req, res, next) => {
 axios
   .post(
     process.env.GOOGLE_SHEET_URL,
-    JSON.stringify({         // ✅ stringify يدوي
-      orderId: order._id.toString(),
+    JSON.stringify({      
       orderNumber: order.orderNumber,
       name: order.name,
       phone: order.phone,
-      email: order.email || "",
       country: "Egypt",
       governorate,
       city,
@@ -208,7 +206,7 @@ const updateOrderStatus = Asncwrapper(async (req, res, next) => {
     await axios.post(process.env.GOOGLE_SHEET_URL, {
       action: "update",
         orderNumber: order.orderNumber, 
-      orderStatus: order.orderStatus,
+        orderStatus: order.orderStatus,
     });
     console.log("✅ Sheet updated");
   } catch (err) {
