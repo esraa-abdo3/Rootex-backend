@@ -160,7 +160,7 @@ const getAllOrders = Asncwrapper(async (req, res, next) => {
   const orders = await Order.find()
     .populate({
       path: "items.product",
-      select: "name images price",
+      select: "name images price idnumber",
     })
     .sort({ createdAt: -1 });
 
