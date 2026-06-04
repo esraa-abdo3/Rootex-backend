@@ -305,38 +305,32 @@ if (Object.keys(reviewheader).length > 0) {
 if (req.body.shippingPrice !== undefined) {
   updateData.shippingPrice = Number(req.body.shippingPrice);
 }
-if (
-  req.body.shippingSignature_ar ||
-  req.body.shippingSignature_en
-) {
+if (req.body.shippingSignature_ar || req.body.shippingSignature_en) {
   updateData.shippingSignature = {
-    ...settings.shippingSignature,
+    ar:
+      req.body.shippingSignature_ar !== undefined
+        ? req.body.shippingSignature_ar
+        : settings.shippingSignature?.ar || "",
 
-    ...(req.body.shippingSignature_ar && {
-      ar: req.body.shippingSignature_ar,
-    }),
-
-    ...(req.body.shippingSignature_en && {
-      en: req.body.shippingSignature_en,
-    }),
+    en:
+      req.body.shippingSignature_en !== undefined
+        ? req.body.shippingSignature_en
+        : settings.shippingSignature?.en || "",
   };
 }
 
 
-    if (
-  req.body.fansText_ar ||
-  req.body.fansText_en
-) {
+if (req.body.fansText_ar || req.body.fansText_en) {
   updateData.fansText = {
-    ...settings.fansText,
+    ar:
+      req.body.fansText_ar !== undefined
+        ? req.body.fansText_ar
+        : settings.fansText?.ar || "",
 
-    ...(req.body.fansText_ar && {
-      ar: req.body.fansText_ar,
-    }),
-
-    ...(req.body.fansText_en && {
-      en: req.body.fansText_en,
-    }),
+    en:
+      req.body.fansText_en !== undefined
+        ? req.body.fansText_en
+        : settings.fansText?.en || "",
   };
 }
     // ================= BUTTON =================
