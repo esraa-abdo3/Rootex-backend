@@ -206,7 +206,8 @@ const updateOrderStatus = Asncwrapper(async (req, res, next) => {
     await axios.post(process.env.GOOGLE_SHEET_URL, {
       action: "update",
         orderNumber: order.orderNumber, 
-        orderStatus: order.orderStatus,
+      orderStatus: order.orderStatus,
+        paymentStatus:order.paymentStatus
     });
     console.log("✅ Sheet updated");
   } catch (err) {
