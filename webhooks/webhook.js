@@ -56,10 +56,11 @@ const paymobWebhook = async (req, res) => {
 
   
 
-    const orderId =
-      obj?.order?.merchant_order_id ||
-      obj?.merchant_order_id;
-
+const orderId =
+  obj?.order?.merchant_order_id ||
+  obj?.merchant_order_id ||
+  obj?.order?.data?.extras?.merchant_order_id || // ✅ المكان الصح
+  obj?.extra?.merchant_order_id;
 
 
     if (!orderId) {
@@ -67,7 +68,7 @@ const paymobWebhook = async (req, res) => {
       return res.sendStatus(200);
     }
 
-    const order = await Order.findById(orderId);
+ const order = await Order.findOne({ orderNumber: orderId });
 
     if (!order) {
      

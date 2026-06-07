@@ -7,6 +7,7 @@ const AppError = require("../../utilits/AppError");
 const Product = require("../../models/Productmodels");
 const axios = require("axios");
 const { createPaymobIntention } = require("../../services/paymob.service");
+const Setting = require("../../models/Settingmodel");
 
 const createOrder = Asncwrapper(async (req, res, next) => {
 
@@ -24,6 +25,10 @@ const createOrder = Asncwrapper(async (req, res, next) => {
 
   let totalPrice = 0;
   let orderItems = [];
+  const setting = await Setting.findOne();
+
+  const shippingPrice = setting?.shippingPrice || 0;
+
 
   for (const item of items) {
     const product = await Product.findById(item.product);
@@ -38,7 +43,9 @@ const createOrder = Asncwrapper(async (req, res, next) => {
       );
     }
 
-    totalPrice += product.price * item.quantity;
+ 
+
+       totalPrice += product.price * item.quantity;
 
     orderItems.push({
       product: product._id,
@@ -49,7 +56,7 @@ const createOrder = Asncwrapper(async (req, res, next) => {
     product.stock -= item.quantity;
     await product.save();
   }
-
+totalPrice += shippingPrice;
   // ── Create order in DB ─────────────────────────────────────
   const order = await Order.create({
     name,
@@ -60,6 +67,7 @@ const createOrder = Asncwrapper(async (req, res, next) => {
     items: orderItems,
     totalPrice,
     paymentMethod,
+    shippingPrice,
     paymentStatus: "pending",
   });
 
@@ -76,27 +84,7 @@ const createOrder = Asncwrapper(async (req, res, next) => {
     })
   );
 
-  // ── Send to Google Sheet (non-blocking) ───────────────────
-  // axios
-  //   .post(process.env.GOOGLE_SHEET_URL, {
-  //     orderId: order._id.toString(),
-  //     orderNumber: order.orderNumber, 
-  //     name: order.name,
-  //     phone: order.phone,
-  //     email: order.email || "",
-  //     country: "Egypt",
-  //     governorate,
-  //     city,
-  //     address: order.address,
-  //     items: sheetItems,
-  //     totalPrice: order.totalPrice,
-  //     paymentMethod: order.paymentMethod,
-  //     paymentStatus: "pending",
-  //     orderStatus: "pending",
-  //   })
-  //   .then(() => console.log("✅ Sent to Google Sheet"))
-  //   .catch((err) => console.log("⚠️ Google Sheet Error:", err.response?.data || err.message));
-// ── Send to Google Sheet (non-blocking) ───────────────────
+ 
 axios
   .post(
     process.env.GOOGLE_SHEET_URL,
@@ -116,9 +104,9 @@ axios
     }),
     {
       headers: {
-        "Content-Type": "text/plain;charset=utf-8",  // ✅ ده هو السر
+        "Content-Type": "text/plain;charset=utf-8",  
       },
-      maxRedirects: 5,  // ✅ اتبع الـ redirect
+      maxRedirects: 5, 
     }
   )
   .then(() => console.log("✅ Sent to Google Sheet"))
