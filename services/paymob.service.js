@@ -17,8 +17,6 @@ const createPaymobIntention = async ({ order, items }) => {
       {
         amount: order.totalPrice * 100,
         currency: "EGP",
-
-        // ✅ بنستخدم المتغير هنا
         payment_methods: paymentMethods,
 
    items: [
@@ -47,7 +45,6 @@ const createPaymobIntention = async ({ order, items }) => {
           phone_number: order.phone,
           city: order.city || "Cairo",
           country: "EG",
-          email: order.email || "test@test.com",
           floor: "NA",
           state: order.governorate || "Cairo",
         },
