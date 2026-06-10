@@ -8,6 +8,7 @@ const Product = require("../../models/Productmodels");
 const axios = require("axios");
 const { createPaymobIntention } = require("../../services/paymob.service");
 const Setting = require("../../models/Settingmodel");
+const { waitUntil } = require('@vercel/functions');
 
 const createOrder = Asncwrapper(async (req, res, next) => {
 
@@ -86,34 +87,60 @@ totalPrice += shippingPrice;
 
  
 
-    try {
-    await axios.post(
-      process.env.GOOGLE_SHEET_URL,
-      JSON.stringify({      
-        orderNumber: order.orderNumber,
-        name: order.name,
-        phone: order.phone,
-        country: "Egypt",
-        governorate,
-        city,
-        address: order.address,
-        items: sheetItems,
-        totalPrice: order.totalPrice,
-        paymentMethod: order.paymentMethod,
-        paymentStatus: "pending",
-        orderStatus: "pending",
-      }),
-      {
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8",  
-        },
-        maxRedirects: 5, 
-      }
-    );
-    console.log("✅ Sent to Google Sheet");
-  } catch (err) {
-    console.log("⚠️ Google Sheet Error:", err.response?.data || err.message);
-  }
+  //   try {
+  //    axios.post(
+  //     process.env.GOOGLE_SHEET_URL,
+  //     JSON.stringify({      
+  //       orderNumber: order.orderNumber,
+  //       name: order.name,
+  //       phone: order.phone,
+  //       country: "Egypt",
+  //       governorate,
+  //       city,
+  //       address: order.address,
+  //       items: sheetItems,
+  //       totalPrice: order.totalPrice,
+  //       paymentMethod: order.paymentMethod,
+  //       paymentStatus: "pending",
+  //       orderStatus: "pending",
+  //     }),
+  //     {
+  //       headers: {
+  //         "Content-Type": "text/plain;charset=utf-8",  
+  //       },
+  //       maxRedirects: 5, 
+  //     }
+  //   );
+  //   console.log("✅ Sent to Google Sheet");
+  // } catch (err) {
+  //   console.log("⚠️ Google Sheet Error:", err.response?.data || err.message);
+  // }
+     const sheetPromise =axios.post(
+    process.env.GOOGLE_SHEET_URL,
+    JSON.stringify({      
+      orderNumber: order.orderNumber,
+      name: order.name,
+      phone: order.phone,
+      country: "Egypt",
+      governorate,
+      city,
+      address: order.address,
+      items: sheetItems,
+      totalPrice: order.totalPrice,
+      paymentMethod: order.paymentMethod,
+      paymentStatus: "pending",
+      orderStatus: "pending",
+    }),
+    {
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",  
+      },
+      maxRedirects: 5, 
+    }
+  )
+  .then(() => console.log("✅ Sent to Google Sheet"))
+    .catch((err) => console.log("⚠️ Google Sheet Error:", err.message));
+  waitUntil(sheetPromise);
   // ── Cash flow ──────────────────────────────────────────────
   if (paymentMethod === "cash") {
     return res.status(201).json({
