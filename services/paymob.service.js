@@ -50,10 +50,10 @@ const createPaymobIntention = async ({ order, items }) => {
         },
 
         extras: {
-          merchant_order_id: order.orderNumber,
+            merchant_order_id: `${order.orderNumber}-${Date.now()}`,
         },
 
-        special_reference: order.orderNumber,
+       special_reference: `${order.orderNumber}-${Date.now()}`,
 
         expiration: 3600,
 
