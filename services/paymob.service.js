@@ -88,7 +88,7 @@ const createPaymobIntention = async ({ order, items }) => {
     parseInt(process.env.PAYMOB_WALLET_INTEGRATION_ID),
   ].filter((id) => !isNaN(id));
  
-  // ✅ FIX 4: orderNumber ثابت بدون Date.now() عشان الـ webhook يلاقيه
+  
   const orderRef = String(order.orderNumber);
  
   try {
@@ -160,4 +160,4 @@ const createPaymobIntention = async ({ order, items }) => {
   }
 };
  
-module.exports = { paymobWebhook, createPaymobIntention };
+module.exports = {  createPaymobIntention };

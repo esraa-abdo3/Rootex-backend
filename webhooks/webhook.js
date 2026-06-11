@@ -164,14 +164,13 @@ const paymobWebhook = async (req, res) => {
  
     const { obj } = req.body;
  
-    // ✅ FIX 1: استخراج الـ orderId من المكان الصح في Paymob v1
+ 
     const rawId =
       obj?.order?.data?.extras?.merchant_order_id ||
       obj?.special_reference ||
       obj?.order?.merchant_order_id ||
       obj?.merchant_order_id;
  
-    // ✅ FIX 2: شيل الـ timestamp اللو اتضاف بالغلط قبل كده
     const orderId = rawId ? String(rawId).split("-")[0] : null;
  
     console.log("📦 Raw orderId from Paymob:", rawId);
@@ -186,7 +185,7 @@ const paymobWebhook = async (req, res) => {
  
     if (!order) {
       console.log("⚠️ Order not found for orderId:", orderId);
-      // ✅ FIX 3: رجّع 200 مش 404 عشان Paymob ميعيدش المحاولة
+
       return res.sendStatus(200);
     }
  
