@@ -160,4 +160,4 @@ const createPaymobIntention = async ({ order, items }) => {
   }
 };
  
-module.exports = { paymobWebhook, createPaymobIntention };
+module.exports = {  createPaymobIntention };
