@@ -12,7 +12,8 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://rotex-front.vercel.app"  // ✅ من غير quotes جوا أو space
+    "https://rotex-front.vercel.app",
+    "https://beautyhub.es"// ✅ من غير quotes جوا أو space
   ], 
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],

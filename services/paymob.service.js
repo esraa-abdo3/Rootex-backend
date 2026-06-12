@@ -137,10 +137,12 @@ const createPaymobIntention = async ({ order, items }) => {
  
         expiration: 3600,
  
-        notification_url:
-          "https://rootex-backend.vercel.app/api/v1/order/webhook",
+        // notification_url:
+        //   "https://rootex-backend.vercel.app/api/v1/order/webhook",
+        notification_url: "https://api.beautyhub.es/api/v1/order/webhook",
  
-        redirection_url: `https://rotex-front.vercel.app/success/${orderRef}`,
+        // redirection_url: `https://rotex-front.vercel.app/success/${orderRef}`,
+        redirection_url: `https://beautyhub.es/success/${orderRef}`,
       },
       {
         headers: {
