@@ -5,6 +5,7 @@ const Generatejwt = require("../../utilits/Generatejwt");
 const User =require("../../models/Usermodel")
 const { Success, Error, Fail } = require("../../utilits/HttpsStatus");
 const AppError = require("../..//utilits/AppError");
+const crypto = require("crypto");
 
 const register = (async (req, res, next) => {
     const errors = validationResult(req);
@@ -83,12 +84,28 @@ const logout = async (req, res) => {
   });
 
 };
+const changePassword = async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user.id; 
 
+    const user = await User.findById(userId);
+
+  
+    const isValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isValid) {
+        return next(AppError.createError({ data: "كلمة المرور القديمة غير صحيحة" }, 400, Fail));
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.status(200).json({ status: Success, msg: "تم تغيير كلمة المرور بنجاح" });
+};
 
 module.exports = {
     register,
     login,
     getMe,
-    logout
-
+  logout,
+changePassword,
 }

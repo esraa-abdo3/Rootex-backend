@@ -25,6 +25,7 @@ const userSchema = new monogoose.Schema({
     },
 
 
+
 }, { timestamps: true });
 const userModel = monogoose.model("User", userSchema);
 module.exports = userModel;
